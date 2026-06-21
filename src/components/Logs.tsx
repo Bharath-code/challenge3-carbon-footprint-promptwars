@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { CarbonInputs, SectorBreakdown } from '../utils/carbonCalculator';
 import { HardDrive, Plus, ArrowCounterClockwise, Trash } from '@phosphor-icons/react';
 
@@ -17,20 +17,60 @@ interface LogsProps {
   onLoadLog: (inputs: CarbonInputs, actions: string[]) => void;
 }
 
-export function Logs({ currentInputs, currentBreakdown, currentActions, onLoadLog }: LogsProps) {
-  const [logs, setLogs] = useState<SavedLog[]>([]);
+function isValidLog(log: unknown): log is SavedLog {
+  if (!log || typeof log !== 'object') return false;
+  
+  const candidate = log as Record<string, unknown>;
+  if (typeof candidate.id !== 'string') return false;
+  if (typeof candidate.timestamp !== 'string') return false;
+  
+  // Validate inputs
+  const inputs = candidate.inputs as Record<string, unknown> | undefined;
+  if (!inputs || typeof inputs !== 'object') return false;
+  if (typeof inputs.carMilesPerYear !== 'number' || isNaN(inputs.carMilesPerYear)) return false;
+  if (typeof inputs.carType !== 'string') return false;
+  if (typeof inputs.transitMilesPerYear !== 'number' || isNaN(inputs.transitMilesPerYear)) return false;
+  if (typeof inputs.flightHoursShort !== 'number' || isNaN(inputs.flightHoursShort)) return false;
+  if (typeof inputs.flightHoursLong !== 'number' || isNaN(inputs.flightHoursLong)) return false;
+  if (typeof inputs.electricityKWhPerMonth !== 'number' || isNaN(inputs.electricityKWhPerMonth)) return false;
+  if (typeof inputs.isElectricityRenewable !== 'boolean') return false;
+  if (typeof inputs.gasThermsPerMonth !== 'number' || isNaN(inputs.gasThermsPerMonth)) return false;
+  if (typeof inputs.householdSize !== 'number' || isNaN(inputs.householdSize)) return false;
+  if (typeof inputs.dietType !== 'string') return false;
+  if (typeof inputs.shoppingLevel !== 'string') return false;
+  if (typeof inputs.doesRecycleAndCompost !== 'boolean') return false;
 
-  // Load logs on mount
-  useEffect(() => {
+  // Validate breakdown
+  const breakdown = candidate.breakdown as Record<string, unknown> | undefined;
+  if (!breakdown || typeof breakdown !== 'object') return false;
+  if (typeof breakdown.transport !== 'number' || isNaN(breakdown.transport)) return false;
+  if (typeof breakdown.energy !== 'number' || isNaN(breakdown.energy)) return false;
+  if (typeof breakdown.diet !== 'number' || isNaN(breakdown.diet)) return false;
+  if (typeof breakdown.waste !== 'number' || isNaN(breakdown.waste)) return false;
+  if (typeof breakdown.total !== 'number' || isNaN(breakdown.total)) return false;
+
+  // Validate activeActions
+  if (!Array.isArray(candidate.activeActions)) return false;
+  if (!candidate.activeActions.every((action: unknown) => typeof action === 'string')) return false;
+
+  return true;
+}
+
+export function Logs({ currentInputs, currentBreakdown, currentActions, onLoadLog }: LogsProps) {
+  const [logs, setLogs] = useState<SavedLog[]>(() => {
     try {
       const stored = localStorage.getItem('carbon_ledger_logs');
       if (stored) {
-        setLogs(JSON.parse(stored));
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          return parsed.filter(isValidLog);
+        }
       }
     } catch (e) {
-      console.error('Failed to load logs', e);
+      console.error('Failed to load initial logs', e);
     }
-  }, []);
+    return [];
+  });
 
   // Save logs to localStorage
   const saveLogs = (newLogs: SavedLog[]) => {

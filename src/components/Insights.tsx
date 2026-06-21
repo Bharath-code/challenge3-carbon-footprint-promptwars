@@ -13,7 +13,10 @@ export function Insights({ inputs, breakdown, activeActionsCount }: InsightsProp
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
+    const loadStartTimer = setTimeout(() => {
+      setLoading(true);
+    }, 0);
+
     const timer = setTimeout(() => {
       // Analyze sectors to find highest contributor
       const sectors = [
@@ -92,7 +95,10 @@ export function Insights({ inputs, breakdown, activeActionsCount }: InsightsProp
       setLoading(false);
     }, 400);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(loadStartTimer);
+      clearTimeout(timer);
+    };
   }, [inputs, breakdown, activeActionsCount]);
 
   const getSystemStatus = () => {

@@ -10,7 +10,7 @@ interface CalculatorProps {
 }
 
 export function Calculator({ inputs, onChange, breakdown, activeActions }: CalculatorProps) {
-  const updateInput = (key: keyof CarbonInputs, val: any) => {
+  const updateInput = <K extends keyof CarbonInputs>(key: K, val: CarbonInputs[K]) => {
     onChange({
       ...inputs,
       [key]: val,

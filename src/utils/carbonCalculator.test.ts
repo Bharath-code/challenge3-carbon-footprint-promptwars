@@ -9,6 +9,7 @@ import {
   calculateCarbonBreakdown,
 } from './carbonCalculator';
 import type { CarbonInputs } from './carbonCalculator';
+import { ACTION_ITEMS } from './actionItems';
 
 describe('Carbon Calculator Logic', () => {
   describe('calculateCarCarbon', () => {
@@ -108,6 +109,71 @@ describe('Carbon Calculator Logic', () => {
       expect(breakdown.diet).toBe(1200);
       expect(breakdown.waste).toBe(850);
       expect(breakdown.total).toBe(4280 + 825 + 1200 + 850);
+    });
+  });
+
+  describe('ACTION_ITEMS formulas', () => {
+    const defaultInputs: CarbonInputs = {
+      carMilesPerYear: 8000,
+      carType: 'sedan',
+      transitMilesPerYear: 1500,
+      flightHoursShort: 6,
+      flightHoursLong: 12,
+      electricityKWhPerMonth: 450,
+      isElectricityRenewable: false,
+      gasThermsPerMonth: 15,
+      householdSize: 2,
+      dietType: 'low-meat',
+      shoppingLevel: 'average',
+      doesRecycleAndCompost: false,
+    };
+
+    it('calculates bike commute savings correctly', () => {
+      const bikeCommute = ACTION_ITEMS.find((a) => a.id === 'bike-commute');
+      expect(bikeCommute).toBeDefined();
+      // Replaceable: Math.min(2500, 8000) = 2500 miles. Sedan factor: 0.40. Savings = 2500 * 0.40 = 1000
+      expect(bikeCommute!.calculateSavings(defaultInputs)).toBe(1000);
+    });
+
+    it('calculates meatless mondays savings correctly', () => {
+      const meatless = ACTION_ITEMS.find((a) => a.id === 'meatless-mondays');
+      expect(meatless).toBeDefined();
+      expect(meatless!.calculateSavings({ ...defaultInputs, dietType: 'high-meat' })).toBe(270);
+      expect(meatless!.calculateSavings({ ...defaultInputs, dietType: 'low-meat' })).toBe(130);
+      expect(meatless!.calculateSavings({ ...defaultInputs, dietType: 'vegetarian' })).toBe(45);
+      expect(meatless!.calculateSavings({ ...defaultInputs, dietType: 'vegan' })).toBe(0);
+    });
+
+    it('calculates smart thermostat savings correctly', () => {
+      const thermostat = ACTION_ITEMS.find((a) => a.id === 'smart-thermostat');
+      expect(thermostat).toBeDefined();
+      // Gas emissions: 15 * 12 * 5.3 = 954. Savings: Math.round((954 * 0.08) / 2) = Math.round(38.16) = 38
+      expect(thermostat!.calculateSavings(defaultInputs)).toBe(38);
+    });
+
+    it('calculates line dry laundry savings correctly', () => {
+      const lineDry = ACTION_ITEMS.find((a) => a.id === 'line-dry');
+      expect(lineDry).toBeDefined();
+      // Standard grid (0.37 factor): Math.round((450 * 0.37) / 2) = Math.round(83.25) = 83
+      expect(lineDry!.calculateSavings(defaultInputs)).toBe(83);
+      // Renewable grid (0.02 factor): Math.round((450 * 0.02) / 2) = Math.round(4.5) = 5
+      expect(lineDry!.calculateSavings({ ...defaultInputs, isElectricityRenewable: true })).toBe(5);
+    });
+
+    it('calculates solar pledge savings correctly', () => {
+      const solar = ACTION_ITEMS.find((a) => a.id === 'solar-pledge');
+      expect(solar).toBeDefined();
+      // Standard grid: Math.round((450 * 12 * (0.37 - 0.02)) / 2) = Math.round((5400 * 0.35) / 2) = Math.round(945) = 945
+      expect(solar!.calculateSavings(defaultInputs)).toBe(945);
+      // Renewable grid: 0
+      expect(solar!.calculateSavings({ ...defaultInputs, isElectricityRenewable: true })).toBe(0);
+    });
+
+    it('calculates waste sorting savings correctly', () => {
+      const sorting = ACTION_ITEMS.find((a) => a.id === 'waste-sorting');
+      expect(sorting).toBeDefined();
+      expect(sorting!.calculateSavings({ ...defaultInputs, doesRecycleAndCompost: false })).toBe(250);
+      expect(sorting!.calculateSavings({ ...defaultInputs, doesRecycleAndCompost: true })).toBe(0);
     });
   });
 });

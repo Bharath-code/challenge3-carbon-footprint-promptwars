@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { CarbonInputs, SectorBreakdown } from '../utils/carbonCalculator';
-import { ACTION_ITEMS } from './Ledger';
+import { ACTION_ITEMS } from '../utils/actionItems';
 import { playPrintTick } from '../utils/audioSynth';
 import { Printer, DownloadSimple } from '@phosphor-icons/react';
 
@@ -12,16 +12,14 @@ interface ReceiptProps {
 
 export function Receipt({ inputs, breakdown, activeActions }: ReceiptProps) {
   const [isPrinting, setIsPrinting] = useState(false);
-  const [txId, setTxId] = useState('');
-
-  // Generate a random transaction transaction reference on load
-  useEffect(() => {
-    setTxId(Math.random().toString(36).substring(2, 10).toUpperCase());
-  }, []);
+  const [txId] = useState(() => Math.random().toString(36).substring(2, 10).toUpperCase());
 
   // Trigger print vibration and sound tick sequence when emissions recalculate
   useEffect(() => {
-    setIsPrinting(true);
+    const printStartTimeout = setTimeout(() => {
+      setIsPrinting(true);
+    }, 0);
+
     const soundInterval = setInterval(() => {
       playPrintTick();
     }, 60);
@@ -32,6 +30,7 @@ export function Receipt({ inputs, breakdown, activeActions }: ReceiptProps) {
     }, 400);
 
     return () => {
+      clearTimeout(printStartTimeout);
       clearInterval(soundInterval);
       clearTimeout(stopTimer);
     };
