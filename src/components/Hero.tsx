@@ -66,7 +66,7 @@ function BrutalistCloud({ delay, duration, y, scale, opacity, staticX }: CloudPr
 
 export function Hero() {
   return (
-    <section className="w-full min-h-[calc(100dvh-80px)] flex flex-col md:flex-row brutalist-border-thin bg-white overflow-hidden">
+    <section id="hero" className="w-full min-h-[calc(100dvh-80px)] flex flex-col md:flex-row brutalist-border-thin bg-white overflow-hidden">
       {/* Left Column: Text Content */}
       <div className="flex-1 flex flex-col justify-center p-8 md:p-16 border-b-4 md:border-b-0 md:border-r-4 border-black bg-white">
         <div className="max-w-xl flex flex-col gap-6">

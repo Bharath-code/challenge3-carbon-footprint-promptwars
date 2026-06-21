@@ -51,13 +51,13 @@ export function Receipt({ inputs, breakdown, activeActions }: ReceiptProps) {
   return (
     <div className="flex flex-col gap-4 w-full">
       {/* Physical Slot line */}
-      <div className="w-full h-4 bg-black brutalist-border-thin relative">
+      <div className="w-full h-4 bg-black brutalist-border-thin relative receipt-slot-line">
         <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-4/5 h-1.5 bg-zinc-800 border-b border-zinc-900 mt-1"></div>
       </div>
 
       {/* Main Paper Receipt */}
       <div
-        className={`receipt-paper brutalist-border p-6 font-mono text-xs text-black brutalist-shadow-lg flex flex-col gap-4 transition-all relative ${
+        className={`receipt-paper brutalist-border p-6 font-mono text-xs text-black brutalist-shadow-lg flex flex-col gap-4 transition-all relative receipt-print-target ${
           isPrinting ? 'animate-print-vibration translate-y-1' : 'translate-y-0'
         }`}
       >
@@ -159,7 +159,7 @@ export function Receipt({ inputs, breakdown, activeActions }: ReceiptProps) {
         <button
           type="button"
           onClick={handlePrint}
-          className="w-full mt-2 font-mono text-[10px] font-black uppercase border-2 border-black bg-white hover:bg-brutalist-bg text-black py-2.5 flex items-center justify-center gap-2 brutalist-shadow-sm active:translate-y-[2px] active:translate-x-[2px] active:shadow-none transition-all"
+          className="w-full mt-2 font-mono text-[10px] font-black uppercase border-2 border-black bg-white hover:bg-brutalist-bg text-black py-2.5 flex items-center justify-center gap-2 brutalist-shadow-sm active:translate-y-[2px] active:translate-x-[2px] active:shadow-none transition-all receipt-print-btn"
         >
           <Printer size={14} weight="bold" />
           <span>Print ledger document</span>
