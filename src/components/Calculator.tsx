@@ -1,13 +1,15 @@
 import type { CarbonInputs, SectorBreakdown } from '../utils/carbonCalculator';
 import { Car, House, Leaf, Trash } from '@phosphor-icons/react';
+import { Receipt } from './Receipt';
 
 interface CalculatorProps {
   inputs: CarbonInputs;
   onChange: (inputs: CarbonInputs) => void;
   breakdown: SectorBreakdown;
+  activeActions: string[];
 }
 
-export function Calculator({ inputs, onChange, breakdown }: CalculatorProps) {
+export function Calculator({ inputs, onChange, breakdown, activeActions }: CalculatorProps) {
   const updateInput = (key: keyof CarbonInputs, val: any) => {
     onChange({
       ...inputs,
@@ -408,10 +410,13 @@ export function Calculator({ inputs, onChange, breakdown }: CalculatorProps) {
             </div>
             <div className="flex justify-between">
               <span>Global Average:</span>
-              <span className="text-white font-bold">4.7 t / person</span>
+              <span className="text-black font-bold">4.7 t / person</span>
             </div>
           </div>
         </div>
+
+        {/* Physical Dot-Matrix Print Receipt */}
+        <Receipt inputs={inputs} breakdown={breakdown} activeActions={activeActions} />
       </div>
     </section>
   );

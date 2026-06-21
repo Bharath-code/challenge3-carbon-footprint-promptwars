@@ -1,6 +1,11 @@
-import { Globe, GitBranch } from '@phosphor-icons/react';
+import { Globe, GitBranch, SpeakerHigh, SpeakerSimpleX } from '@phosphor-icons/react';
 
-export function Header() {
+interface HeaderProps {
+  soundOn: boolean;
+  onToggleSound: () => void;
+}
+
+export function Header({ soundOn, onToggleSound }: HeaderProps) {
   return (
     <header className="w-full brutalist-border-thin bg-white flex flex-col md:flex-row justify-between items-center px-6 py-4 gap-4 z-50">
       <div className="flex items-center gap-3">
@@ -22,13 +27,31 @@ export function Header() {
         <a href="#insights" className="hover:underline transition-all">
           03. Insights
         </a>
+        <a href="#benchmarks" className="hover:underline transition-all">
+          04. Benchmarks
+        </a>
       </nav>
 
       <div className="flex items-center gap-4">
+        <button
+          type="button"
+          onClick={onToggleSound}
+          className={`flex items-center gap-1.5 font-mono text-xs brutalist-border-thin px-3 py-1.5 font-bold transition-all cursor-pointer ${
+            soundOn
+              ? 'bg-brutalist-accent text-black border-black brutalist-shadow-sm'
+              : 'bg-zinc-100 text-zinc-500 border-black'
+          }`}
+          aria-label={soundOn ? 'Mute sound effects' : 'Unmute sound effects'}
+        >
+          {soundOn ? <SpeakerHigh size={14} weight="bold" /> : <SpeakerSimpleX size={14} weight="bold" />}
+          <span>[ SOUND: {soundOn ? 'ON' : 'OFF'} ]</span>
+        </button>
+
         <div className="hidden lg:flex items-center gap-2 font-mono text-xs brutalist-border-thin bg-brutalist-bg px-3 py-1.5 font-bold">
           <span className="w-2.5 h-2.5 bg-brutalist-accent brutalist-border-thin inline-block animate-pulse"></span>
           <span>Sys: Active</span>
         </div>
+        
         <a
           href="https://github.com/Bharath-code/challenge3-carbon-footprint-promptwars"
           target="_blank"

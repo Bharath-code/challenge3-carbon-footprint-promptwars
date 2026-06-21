@@ -138,3 +138,35 @@
   background: var(--color-brutalist-black);
   border: 2px solid var(--color-brutalist-bg);
 }
+
+/* Receipt Paper Style */
+.receipt-paper {
+  background-color: #FFFFFF;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 0);
+  background-size: 8px 8px;
+  position: relative;
+}
+
+/* Print vibration keyframes */
+@keyframes print-shake {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(1px, -1px); }
+  50% { transform: translate(-1px, 1px); }
+  75% { transform: translate(1px, 1px); }
+  100% { transform: translate(0, 0); }
+}
+
+.animate-print-vibration {
+  animation: print-shake 0.08s infinite;
+}
+
+/* Custom terminal scrollbar */
+.custom-terminal-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-terminal-scroll::-webkit-scrollbar-track {
+  background: #000000;
+}
+.custom-terminal-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-brutalist-accent);
+}

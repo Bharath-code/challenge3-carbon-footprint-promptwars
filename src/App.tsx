@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { Calculator } from './components/Calculator';
 import { Ledger, ACTION_ITEMS } from './components/Ledger';
+import { Benchmarks } from './components/Benchmarks';
 import { Insights } from './components/Insights';
 import { Logs } from './components/Logs';
 import { calculateCarbonBreakdown } from './utils/carbonCalculator';
 import type { CarbonInputs } from './utils/carbonCalculator';
+import { playClick, playTerminalBoot, toggleSound } from './utils/audioSynth';
 import { Leaf } from '@phosphor-icons/react';
 
 const DEFAULT_INPUTS: CarbonInputs = {
@@ -27,6 +29,15 @@ const DEFAULT_INPUTS: CarbonInputs = {
 function App() {
   const [inputs, setInputs] = useState<CarbonInputs>(DEFAULT_INPUTS);
   const [activeActions, setActiveActions] = useState<string[]>([]);
+  const [soundOn, setSoundOn] = useState(true);
+
+  // Play a welcoming retro boot sequence chime after components mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      playTerminalBoot();
+    }, 600);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Calculate base emissions
   const baseBreakdown = calculateCarbonBreakdown(inputs);
@@ -65,13 +76,20 @@ function App() {
     adjustedBreakdown.diet +
     adjustedBreakdown.waste;
 
+  const handleInputChange = (newInputs: CarbonInputs) => {
+    playClick();
+    setInputs(newInputs);
+  };
+
   const handleToggleAction = (actionId: string) => {
+    playClick();
     setActiveActions((prev) =>
       prev.includes(actionId) ? prev.filter((id) => id !== actionId) : [...prev, actionId]
     );
   };
 
   const handleLoadCheckpoint = (loadedInputs: CarbonInputs, loadedActions: string[]) => {
+    playClick();
     setInputs(loadedInputs);
     setActiveActions(loadedActions);
     
@@ -79,9 +97,18 @@ function App() {
     document.getElementById('calculator')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleToggleSound = () => {
+    const nextState = !soundOn;
+    setSoundOn(nextState);
+    toggleSound(nextState);
+    if (nextState) {
+      setTimeout(() => playClick(), 50);
+    }
+  };
+
   return (
     <div className="w-full flex flex-col min-h-dvh bg-brutalist-bg selection:bg-brutalist-accent selection:text-black">
-      <Header />
+      <Header soundOn={soundOn} onToggleSound={handleToggleSound} />
       
       <main className="flex-1 w-full">
         <Hero />
@@ -89,8 +116,9 @@ function App() {
         {/* Main interactive calculator visualizer */}
         <Calculator
           inputs={inputs}
-          onChange={setInputs}
+          onChange={handleInputChange}
           breakdown={adjustedBreakdown}
+          activeActions={activeActions}
         />
         
         {/* Dynamic action pledge ledger */}
@@ -99,6 +127,9 @@ function App() {
           activeActions={activeActions}
           onToggleAction={handleToggleAction}
         />
+
+        {/* Dynamic comparisons benchmarks visualizer */}
+        <Benchmarks breakdown={adjustedBreakdown} />
         
         {/* CRT console insights based on net breakdown */}
         <Insights
