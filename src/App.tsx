@@ -5,6 +5,7 @@ import { Calculator } from './components/Calculator';
 import { Ledger, ACTION_ITEMS } from './components/Ledger';
 import { Benchmarks } from './components/Benchmarks';
 import { Insights } from './components/Insights';
+import { Leaderboard } from './components/Leaderboard';
 import { Logs } from './components/Logs';
 import { calculateCarbonBreakdown } from './utils/carbonCalculator';
 import type { CarbonInputs } from './utils/carbonCalculator';
@@ -136,6 +137,12 @@ function App() {
           inputs={inputs}
           breakdown={adjustedBreakdown}
           activeActionsCount={activeActions.length}
+        />
+
+        {/* Dynamic Leaderboard for user ranking */}
+        <Leaderboard
+          currentFootprint={adjustedBreakdown.total / 1000}
+          activePledgesCount={activeActions.length}
         />
         
         {/* LocalStorage logging capability */}
