@@ -94,38 +94,41 @@ export function Benchmarks({ breakdown }: BenchmarksProps) {
           </div>
 
           {/* Extreme Outlier Comparator Card */}
-          <div className="brutalist-card p-6 bg-black text-white flex flex-col gap-6">
-            <h3 className="font-mono font-black uppercase text-sm border-b border-zinc-800 pb-2 text-brutalist-accent flex items-center gap-2">
+          <div className="brutalist-card p-6 bg-white text-black flex flex-col gap-6">
+            <h3 className="font-mono font-black uppercase text-sm border-b-2 border-black pb-2 flex items-center gap-2">
               <AirplaneTilt size={18} weight="bold" />
               <span>Extreme carbon comparisons</span>
             </h3>
 
             <div className="flex-1 flex flex-col justify-center gap-4 py-4">
-              <div className="border border-zinc-800 p-4 bg-zinc-950/40">
-                <span className="font-mono text-[10px] text-zinc-400 uppercase tracking-wider block">
+              <div className="border-2 border-black p-4 bg-brutalist-bg">
+                <span className="font-mono text-[10px] text-brutalist-gray uppercase tracking-wider block font-bold">
                   TAYLOR SWIFT PRIVATE JET OUTPUT:
                 </span>
-                <span className="text-3xl font-black font-mono text-white block mt-1">
+                <span className="text-3xl font-black font-mono text-black block mt-1">
                   8,290.0 t CO2e
                 </span>
-                <span className="font-mono text-[9px] text-zinc-500 block mt-0.5">
+                <span className="font-mono text-[9px] text-brutalist-gray block mt-0.5 uppercase font-bold">
                   Est. annual emissions from aviation transit
                 </span>
               </div>
 
               <div className="font-mono text-xs leading-relaxed uppercase">
-                At your current rate of <span className="text-brutalist-accent font-bold">{(breakdown.total / 1000).toFixed(2)} t</span> emissions per year:
-                <div className="text-4xl font-black text-white my-3 font-sans border-y border-zinc-800 py-3 tracking-tighter">
-                  {yearsToMatchTS.toLocaleString()} <span className="text-sm font-mono text-brutalist-accent block mt-1">YEARS TO MATCH ONE YEAR OF HER JET</span>
+                At your current rate of <span className="underline decoration-2 decoration-brutalist-accent font-black">{(breakdown.total / 1000).toFixed(2)} t</span> emissions per year:
+                <div className="text-5xl font-black text-black my-3 font-sans border-y-2 border-black py-3 tracking-tighter">
+                  {yearsToMatchTS.toLocaleString()}
+                  <span className="block mt-1.5 bg-black text-brutalist-accent text-[9px] font-mono px-2 py-0.5 max-w-max uppercase font-bold select-none">
+                    Years to match one year of her jet
+                  </span>
                 </div>
-                It would take you over {yearsToMatchTS.toLocaleString()} years to match her private jet emissions.
+                It would take you over {yearsToMatchTS.toLocaleString()} years of your current lifestyle to equal her private jet output.
               </div>
             </div>
 
-            <div className="border-t border-zinc-800 pt-4 font-mono text-[9px] text-zinc-400 flex items-start gap-2">
-              <Tree size={16} className="text-brutalist-accent flex-shrink-0" />
+            <div className="border-t-2 border-black pt-4 font-mono text-[9px] text-brutalist-gray flex items-start gap-2 uppercase font-bold">
+              <Tree size={16} className="text-black flex-shrink-0" />
               <span>
-                Comparisons emphasize structural carbon inequality. Direct policy changes and carbon offsets are vital alongside individual pledges.
+                Comparisons emphasize structural carbon inequality. Direct policy changes are vital alongside individual actions.
               </span>
             </div>
           </div>
