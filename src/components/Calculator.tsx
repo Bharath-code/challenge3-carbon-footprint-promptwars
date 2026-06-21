@@ -276,13 +276,13 @@ export function Calculator({ inputs, onChange, breakdown }: CalculatorProps) {
 
       {/* Output Panel / Summary */}
       <div className="flex-[2] flex flex-col gap-8 lg:sticky lg:top-8 self-start w-full">
-        <div className="brutalist-card p-6 bg-black text-white brutalist-shadow-lg flex flex-col gap-6">
+        <div className="brutalist-card p-6 bg-white text-black brutalist-shadow-lg flex flex-col gap-6">
           <div
-            className="border-b border-zinc-800 pb-4"
+            className="border-b-2 border-black pb-4"
             role="region"
             aria-label="Realtime emissions output report"
           >
-            <span className="font-mono text-xs text-brutalist-accent uppercase tracking-widest font-black">
+            <span className="font-mono text-xs text-brutalist-gray uppercase tracking-widest font-black">
               [ REALTIME METRICS ]
             </span>
             <div
@@ -291,26 +291,26 @@ export function Calculator({ inputs, onChange, breakdown }: CalculatorProps) {
               aria-atomic="true"
             >
               <span className="sr-only">Total estimated carbon footprint:</span>
-              <span className="text-6xl font-black font-sans leading-none text-white">{totalTons}</span>
-              <span className="font-mono text-lg text-brutalist-accent uppercase font-black" aria-label="Metric Tons of Carbon Dioxide Equivalent per Year">
+              <span className="text-6xl font-black font-sans leading-none text-black">{totalTons}</span>
+              <span className="font-mono text-lg uppercase font-black" aria-label="Metric Tons of Carbon Dioxide Equivalent per Year">
                 t CO2e/yr
               </span>
             </div>
-            <p className="text-xs text-zinc-400 font-mono mt-1">
-              Estimated individual greenhouse gas footprint
+            <p className="text-xs text-brutalist-gray font-mono mt-2 font-bold">
+              ESTIMATED INDIVIDUAL GREENHOUSE GAS FOOTPRINT
             </p>
           </div>
 
           {/* Breakdown bars */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-5">
             {/* Transport Bar */}
             <div className="flex flex-col gap-1.5">
               <div className="flex justify-between font-mono text-xs font-bold">
-                <span className="flex items-center gap-1"><Car size={14} /> Transport</span>
+                <span className="flex items-center gap-1"><Car size={14} /> Transport ({Math.round((breakdown.transport / Math.max(1, breakdown.total)) * 100)}%)</span>
                 <span aria-label={`${transportTons} Metric Tons of CO2 equivalent`}>{transportTons} t</span>
               </div>
               <div
-                className="w-full h-4 bg-zinc-800 brutalist-border-thin border-zinc-700 rounded-none overflow-hidden"
+                className="w-full h-5 bg-brutalist-bg brutalist-border-thin border-black rounded-none overflow-hidden"
                 role="progressbar"
                 aria-valuenow={breakdown.transport}
                 aria-valuemin={0}
@@ -318,7 +318,7 @@ export function Calculator({ inputs, onChange, breakdown }: CalculatorProps) {
                 aria-label="Transport sector emissions proportion"
               >
                 <div
-                  className="h-full bg-brutalist-accent transition-all duration-300"
+                  className="h-full bg-brutalist-accent brutalist-border-thin border-r-2 border-black transition-all duration-300"
                   style={{ width: `${getPercentage(breakdown.transport)}%` }}
                 ></div>
               </div>
@@ -327,11 +327,11 @@ export function Calculator({ inputs, onChange, breakdown }: CalculatorProps) {
             {/* Energy Bar */}
             <div className="flex flex-col gap-1.5">
               <div className="flex justify-between font-mono text-xs font-bold">
-                <span className="flex items-center gap-1"><House size={14} /> Home Energy</span>
+                <span className="flex items-center gap-1"><House size={14} /> Home Energy ({Math.round((breakdown.energy / Math.max(1, breakdown.total)) * 100)}%)</span>
                 <span aria-label={`${energyTons} Metric Tons of CO2 equivalent`}>{energyTons} t</span>
               </div>
               <div
-                className="w-full h-4 bg-zinc-800 brutalist-border-thin border-zinc-700 rounded-none overflow-hidden"
+                className="w-full h-5 bg-brutalist-bg brutalist-border-thin border-black rounded-none overflow-hidden"
                 role="progressbar"
                 aria-valuenow={breakdown.energy}
                 aria-valuemin={0}
@@ -339,7 +339,7 @@ export function Calculator({ inputs, onChange, breakdown }: CalculatorProps) {
                 aria-label="Household energy sector emissions proportion"
               >
                 <div
-                  className="h-full bg-brutalist-accent transition-all duration-300"
+                  className="h-full bg-brutalist-accent brutalist-border-thin border-r-2 border-black transition-all duration-300"
                   style={{ width: `${getPercentage(breakdown.energy)}%` }}
                 ></div>
               </div>
@@ -348,11 +348,11 @@ export function Calculator({ inputs, onChange, breakdown }: CalculatorProps) {
             {/* Diet Bar */}
             <div className="flex flex-col gap-1.5">
               <div className="flex justify-between font-mono text-xs font-bold">
-                <span className="flex items-center gap-1"><Leaf size={14} /> Food Diet</span>
+                <span className="flex items-center gap-1"><Leaf size={14} /> Food Diet ({Math.round((breakdown.diet / Math.max(1, breakdown.total)) * 100)}%)</span>
                 <span aria-label={`${dietTons} Metric Tons of CO2 equivalent`}>{dietTons} t</span>
               </div>
               <div
-                className="w-full h-4 bg-zinc-800 brutalist-border-thin border-zinc-700 rounded-none overflow-hidden"
+                className="w-full h-5 bg-brutalist-bg brutalist-border-thin border-black rounded-none overflow-hidden"
                 role="progressbar"
                 aria-valuenow={breakdown.diet}
                 aria-valuemin={0}
@@ -360,7 +360,7 @@ export function Calculator({ inputs, onChange, breakdown }: CalculatorProps) {
                 aria-label="Dietary emissions proportion"
               >
                 <div
-                  className="h-full bg-brutalist-accent transition-all duration-300"
+                  className="h-full bg-brutalist-accent brutalist-border-thin border-r-2 border-black transition-all duration-300"
                   style={{ width: `${getPercentage(breakdown.diet)}%` }}
                 ></div>
               </div>
@@ -369,11 +369,11 @@ export function Calculator({ inputs, onChange, breakdown }: CalculatorProps) {
             {/* Waste Bar */}
             <div className="flex flex-col gap-1.5">
               <div className="flex justify-between font-mono text-xs font-bold">
-                <span className="flex items-center gap-1"><Trash size={14} /> Waste & Cons.</span>
+                <span className="flex items-center gap-1"><Trash size={14} /> Waste & Cons. ({Math.round((breakdown.waste / Math.max(1, breakdown.total)) * 100)}%)</span>
                 <span aria-label={`${wasteTons} Metric Tons of CO2 equivalent`}>{wasteTons} t</span>
               </div>
               <div
-                className="w-full h-4 bg-zinc-800 brutalist-border-thin border-zinc-700 rounded-none overflow-hidden"
+                className="w-full h-5 bg-brutalist-bg brutalist-border-thin border-black rounded-none overflow-hidden"
                 role="progressbar"
                 aria-valuenow={breakdown.waste}
                 aria-valuemin={0}
@@ -381,11 +381,19 @@ export function Calculator({ inputs, onChange, breakdown }: CalculatorProps) {
                 aria-label="Consumption and waste emissions proportion"
               >
                 <div
-                  className="h-full bg-brutalist-accent transition-all duration-300"
+                  className="h-full bg-brutalist-accent brutalist-border-thin border-r-2 border-black transition-all duration-300"
                   style={{ width: `${getPercentage(breakdown.waste)}%` }}
                 ></div>
               </div>
             </div>
+          </div>
+
+          {/* Graph Legend & Explanation */}
+          <div className="border-t-2 border-black pt-4 font-mono text-[10px] text-brutalist-gray leading-normal uppercase">
+            <span className="font-black text-black">How to read the graph:</span>
+            <p className="mt-1">
+              Each horizontal bar shows your yearly carbon output in metric tons (t) per sector. The percentage displays its proportion of your total footprint. Adjust values in the control deck on the left to reduce emissions.
+            </p>
           </div>
 
           {/* Reference indicators */}
