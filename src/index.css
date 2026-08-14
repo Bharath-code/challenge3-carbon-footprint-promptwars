@@ -1,260 +1,155 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brutalist-bg: #EAE9E4; /* industrial concrete/paper background */
-  --color-brutalist-black: #000000;
-  --color-brutalist-accent: #00FF5F; /* electric neon green */
-  --color-brutalist-card: #FFFFFF;
-  --color-brutalist-gray: #7F7F7F;
-  --color-brutalist-light-gray: #D1D1D1;
-  --font-sans: "Space Grotesk", sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, monospace;
+  --font-display: "Syne", "Space Grotesk", sans-serif;
+  --font-sans: "Outfit", "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --color-obsidian-950: #050507;
+  --color-obsidian-900: #09090d;
+  --color-obsidian-850: #0f0f14;
+  --color-obsidian-800: #16161d;
+  --color-obsidian-700: #23232c;
+  --color-obsidian-600: #343442;
+  
+  --color-amber-glow: #f59e0b;
+  --color-amber-dim: #78350f;
+  --color-emerald-glow: #10b981;
+  --color-cyan-glow: #06b6d4;
 }
 
 @layer base {
+  * {
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
   body {
-    background-color: var(--color-brutalist-bg);
-    color: var(--color-brutalist-black);
-    font-family: var(--font-sans);
+    background-color: #070709;
+    color: #f1f1f5;
+    font-family: "Outfit", "Space Grotesk", sans-serif;
     margin: 0;
     padding: 0;
     min-height: 100dvh;
+    overflow-x: hidden;
   }
-  
-  /* Reset default react styles that might conflict */
+
   #root {
     width: 100%;
     margin: 0;
     padding: 0;
     max-width: none;
-    text-align: left;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: "Syne", "Space Grotesk", sans-serif;
+    letter-spacing: -0.03em;
+  }
+
+  code, pre, .font-mono {
+    font-family: "JetBrains Mono", monospace;
   }
 }
 
-/* Custom Brutalist Utility Styles */
-.brutalist-border {
-  border: 4px solid var(--color-brutalist-black);
+/* Bespoke Grid Background */
+.bg-grid-pattern {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
 
-.brutalist-border-thin {
-  border: 2px solid var(--color-brutalist-black);
+.bg-dots-pattern {
+  background-size: 24px 24px;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
 }
 
-.brutalist-shadow {
-  box-shadow: 4px 4px 0px 0px var(--color-brutalist-black);
+/* Glowing Border System */
+.glass-panel {
+  background: rgba(15, 15, 20, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.brutalist-shadow-sm {
-  box-shadow: 2px 2px 0px 0px var(--color-brutalist-black);
+.glass-panel-amber {
+  background: rgba(20, 16, 10, 0.8);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.1);
 }
 
-.brutalist-shadow-lg {
-  box-shadow: 8px 8px 0px 0px var(--color-brutalist-black);
-}
-
-.brutalist-btn {
-  background-color: var(--color-brutalist-accent);
-  color: var(--color-brutalist-black);
-  border: 4px solid var(--color-brutalist-black);
-  box-shadow: 4px 4px 0px 0px var(--color-brutalist-black);
-  font-family: var(--font-mono);
-  font-weight: 700;
-  text-transform: uppercase;
-  transition: all 0.05s ease;
-  cursor: pointer;
-  user-select: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.brutalist-btn:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px 0px var(--color-brutalist-black);
-}
-
-.brutalist-btn:active {
-  transform: translate(4px, 4px);
-  box-shadow: 0px 0px 0px 0px var(--color-brutalist-black);
-}
-
-.brutalist-btn-secondary {
-  background-color: var(--color-brutalist-card);
-  color: var(--color-brutalist-black);
-  border: 4px solid var(--color-brutalist-black);
-  box-shadow: 4px 4px 0px 0px var(--color-brutalist-black);
-  font-family: var(--font-mono);
-  font-weight: 700;
-  text-transform: uppercase;
-  transition: all 0.05s ease;
-  cursor: pointer;
-  user-select: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.brutalist-btn-secondary:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px 0px var(--color-brutalist-black);
-}
-
-.brutalist-btn-secondary:active {
-  transform: translate(4px, 4px);
-  box-shadow: 0px 0px 0px 0px var(--color-brutalist-black);
-}
-
-.brutalist-card {
-  background-color: var(--color-brutalist-card);
-  border: 4px solid var(--color-brutalist-black);
-  box-shadow: 6px 6px 0px 0px var(--color-brutalist-black);
-}
-
-.brutalist-input {
-  background-color: var(--color-brutalist-card);
-  border: 4px solid var(--color-brutalist-black);
-  color: var(--color-brutalist-black);
-  font-family: var(--font-mono);
-  padding: 8px 12px;
-  outline: none;
-}
-
-.brutalist-input:focus {
-  background-color: var(--color-brutalist-accent);
-  box-shadow: 2px 2px 0px 0px var(--color-brutalist-black);
+.glass-panel-emerald {
+  background: rgba(10, 20, 16, 0.8);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.1);
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 12px;
-}
-::-webkit-scrollbar-track {
-  background: var(--color-brutalist-bg);
-  border-left: 4px solid var(--color-brutalist-black);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--color-brutalist-black);
-  border: 2px solid var(--color-brutalist-bg);
+  width: 6px;
+  height: 6px;
 }
 
-/* Receipt Paper Style */
-.receipt-paper {
-  background-color: #FFFFFF;
-  background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 0);
-  background-size: 8px 8px;
+::-webkit-scrollbar-track {
+  background: #09090d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #272732;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #f59e0b;
+}
+
+/* Subtle Terminal Scanline */
+.scanlines {
   position: relative;
 }
-
-/* Print vibration keyframes */
-@keyframes print-shake {
-  0% { transform: translate(0, 0); }
-  25% { transform: translate(1px, -1px); }
-  50% { transform: translate(-1px, 1px); }
-  75% { transform: translate(1px, 1px); }
-  100% { transform: translate(0, 0); }
+.scanlines::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  z-index: 2;
+  background-size: 100% 3px, 6px 100%;
+  pointer-events: none;
+  opacity: 0.4;
 }
 
-.animate-print-vibration {
-  animation: print-shake 0.08s infinite;
+/* Text glow utilities */
+.glow-amber {
+  text-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
 }
 
-/* Custom terminal scrollbar */
-.custom-terminal-scroll::-webkit-scrollbar {
-  width: 6px;
-}
-.custom-terminal-scroll::-webkit-scrollbar-track {
-  background: #000000;
-}
-.custom-terminal-scroll::-webkit-scrollbar-thumb {
-  background: var(--color-brutalist-accent);
+.glow-emerald {
+  text-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
 }
 
-/* Print Optimization Stylesheet */
-@media print {
-  /* Reset margins, paddings, and background */
-  html, body {
-    background-color: #FFFFFF !important;
-    color: #000000 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    height: auto !important;
-    min-height: 0 !important;
-    width: 100% !important;
-  }
+.glow-cyan {
+  text-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
+}
 
-  /* Hide all main webpage sections */
-  header,
-  footer,
-  #hero,
-  #ledger,
-  #benchmarks,
-  #insights,
-  #logs {
-    display: none !important;
-  }
+/* Shimmer animation */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
 
-  /* Hide the calculator control deck (left column) */
-  #calculator > div:first-child {
-    display: none !important;
-  }
+.animate-shimmer {
+  animation: shimmer 2.5s infinite;
+}
 
-  /* Hide the realtime metrics widget (right column first child) */
-  #calculator > div:last-child > div:first-child {
-    display: none !important;
-  }
+/* Pulsing radar dot */
+@keyframes ping-slow {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(2.2); opacity: 0; }
+  100% { transform: scale(1); opacity: 0; }
+}
 
-  /* Hide the slot line in the receipt component */
-  .receipt-slot-line {
-    display: none !important;
-  }
-
-  /* Hide the print ledger button inside the receipt */
-  .receipt-print-btn {
-    display: none !important;
-  }
-
-  /* Override calculator section grid layout for print */
-  #calculator {
-    display: block !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    max-width: 100% !important;
-    box-shadow: none !important;
-    border: none !important;
-  }
-
-  #calculator > div:last-child {
-    display: block !important;
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    position: static !important;
-    box-shadow: none !important;
-    border: none !important;
-  }
-
-  #calculator > div:last-child > div:last-child {
-    box-shadow: none !important;
-    border: none !important;
-  }
-
-  /* Center the receipt and make it fit the print layout */
-  .receipt-print-target {
-    margin: 0 auto !important;
-    max-width: 100% !important;
-    width: 450px !important;
-    border: 2px solid #000000 !important;
-    box-shadow: none !important;
-    background-color: #FFFFFF !important;
-    background-image: none !important; /* remove radial dots for clean print */
-    padding: 16px !important;
-    position: relative !important;
-  }
-
-  /* Convert the serrated edge background to clean white */
-  .receipt-print-target .bg-brutalist-bg {
-    background-color: #FFFFFF !important;
-  }
+.animate-ping-slow {
+  animation: ping-slow 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
 }

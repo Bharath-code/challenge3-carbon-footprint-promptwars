@@ -1,175 +1,96 @@
-import { useState, useEffect } from 'react';
-import { Header } from './components/Header';
+import React, { useState } from 'react';
+import { Navigation } from './components/Navigation';
 import { Hero } from './components/Hero';
-import { Calculator } from './components/Calculator';
-import { Ledger } from './components/Ledger';
-import { ACTION_ITEMS } from './utils/actionItems';
-import { Benchmarks } from './components/Benchmarks';
-import { Insights } from './components/Insights';
-import { Logs } from './components/Logs';
-import { calculateCarbonBreakdown } from './utils/carbonCalculator';
-import type { CarbonInputs } from './utils/carbonCalculator';
-import { playClick, playTerminalBoot, toggleSound } from './utils/audioSynth';
-import { Leaf } from '@phosphor-icons/react';
+import { ChapterViewer } from './components/ChapterViewer';
+import { SkillifyEngine } from './components/SkillifyEngine';
+import { FieldOfVisionSim } from './components/FieldOfVisionSim';
+import { WhitePillMatrix } from './components/WhitePillMatrix';
+import { EarnestnessRadar } from './components/EarnestnessRadar';
+import { CivicFlywheel } from './components/CivicFlywheel';
+import { Footer } from './components/Footer';
+import { VideoModal } from './components/VideoModal';
 
-const DEFAULT_INPUTS: CarbonInputs = {
-  carMilesPerYear: 8000,
-  carType: 'sedan',
-  transitMilesPerYear: 1500,
-  flightHoursShort: 6,
-  flightHoursLong: 12,
-  electricityKWhPerMonth: 450,
-  isElectricityRenewable: false,
-  gasThermsPerMonth: 15,
-  householdSize: 2,
-  dietType: 'low-meat',
-  shoppingLevel: 'average',
-  doesRecycleAndCompost: false,
-};
+export const App: React.FC = () => {
+  const [activeSection, setActiveSection] = useState<string>('hero');
+  const [isVideoOpen, setIsVideoOpen] = useState<boolean>(false);
+  const [videoTimestamp, setVideoTimestamp] = useState<number>(0);
 
-function App() {
-  const [inputs, setInputs] = useState<CarbonInputs>(DEFAULT_INPUTS);
-  const [activeActions, setActiveActions] = useState<string[]>([]);
-  const [soundOn, setSoundOn] = useState(true);
-
-  // Play a welcoming retro boot sequence chime after components mount
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      playTerminalBoot();
-    }, 600);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Calculate base emissions
-  const baseBreakdown = calculateCarbonBreakdown(inputs);
-
-  // Calculate active savings per sector
-  const activeActionItems = ACTION_ITEMS.filter((item) => activeActions.includes(item.id));
-  
-  const transportSavings = activeActionItems
-    .filter((item) => item.category === 'transport')
-    .reduce((sum, item) => sum + item.calculateSavings(inputs), 0);
-
-  const energySavings = activeActionItems
-    .filter((item) => item.category === 'energy')
-    .reduce((sum, item) => sum + item.calculateSavings(inputs), 0);
-
-  const dietSavings = activeActionItems
-    .filter((item) => item.category === 'diet')
-    .reduce((sum, item) => sum + item.calculateSavings(inputs), 0);
-
-  const wasteSavings = activeActionItems
-    .filter((item) => item.category === 'waste')
-    .reduce((sum, item) => sum + item.calculateSavings(inputs), 0);
-
-  // Compute adjusted net breakdown
-  const adjustedBreakdown = {
-    transport: Math.max(0, baseBreakdown.transport - transportSavings),
-    energy: Math.max(0, baseBreakdown.energy - energySavings),
-    diet: Math.max(0, baseBreakdown.diet - dietSavings),
-    waste: Math.max(0, baseBreakdown.waste - wasteSavings),
-    total: 0,
-  };
-  
-  adjustedBreakdown.total =
-    adjustedBreakdown.transport +
-    adjustedBreakdown.energy +
-    adjustedBreakdown.diet +
-    adjustedBreakdown.waste;
-
-  const handleInputChange = (newInputs: CarbonInputs) => {
-    playClick();
-    setInputs(newInputs);
+  const handleOpenVideo = (seconds: number = 0) => {
+    setVideoTimestamp(seconds);
+    setIsVideoOpen(true);
   };
 
-  const handleToggleAction = (actionId: string) => {
-    playClick();
-    setActiveActions((prev) =>
-      prev.includes(actionId) ? prev.filter((id) => id !== actionId) : [...prev, actionId]
-    );
+  const handleCloseVideo = () => {
+    setIsVideoOpen(false);
   };
 
-  const handleLoadCheckpoint = (loadedInputs: CarbonInputs, loadedActions: string[]) => {
-    playClick();
-    setInputs(loadedInputs);
-    setActiveActions(loadedActions);
-    
-    // Smooth scroll back to calculator
-    document.getElementById('calculator')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleToggleSound = () => {
-    const nextState = !soundOn;
-    setSoundOn(nextState);
-    toggleSound(nextState);
-    if (nextState) {
-      setTimeout(() => playClick(), 50);
+  const scrollToSection = (sectionId: string) => {
+    setActiveSection(sectionId);
+    if (sectionId === 'hero') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const navOffset = 80;
+      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+      const offsetPosition = elementPosition - navOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
     }
   };
 
   return (
-    <div className="w-full flex flex-col min-h-dvh bg-brutalist-bg selection:bg-brutalist-accent selection:text-black">
-      <Header soundOn={soundOn} onToggleSound={handleToggleSound} />
+    <div className="min-h-screen bg-[#070709] text-[#f1f1f5] flex flex-col font-sans selection:bg-amber-400 selection:text-black">
       
-      <main className="flex-1 w-full">
-        <Hero />
-        
-        {/* Main interactive calculator visualizer */}
-        <Calculator
-          inputs={inputs}
-          onChange={handleInputChange}
-          breakdown={adjustedBreakdown}
-          activeActions={activeActions}
-        />
-        
-        {/* Dynamic action pledge ledger */}
-        <Ledger
-          inputs={inputs}
-          activeActions={activeActions}
-          onToggleAction={handleToggleAction}
+      {/* HUD Navigation */}
+      <Navigation
+        activeSection={activeSection}
+        onSelectSection={scrollToSection}
+        onOpenVideo={handleOpenVideo}
+      />
+
+      {/* Main Canvas */}
+      <main className="flex-grow">
+        <Hero
+          onOpenVideo={handleOpenVideo}
+          onExploreThemes={() => scrollToSection('chapters')}
+          onLaunchSkillify={() => scrollToSection('skillify')}
         />
 
-        {/* Dynamic comparisons benchmarks visualizer */}
-        <Benchmarks breakdown={adjustedBreakdown} />
-        
-        {/* CRT console insights based on net breakdown */}
-        <Insights
-          inputs={inputs}
-          breakdown={adjustedBreakdown}
-          activeActionsCount={activeActions.length}
-        />
-        
-        {/* LocalStorage logging capability */}
-        <Logs
-          currentInputs={inputs}
-          currentBreakdown={adjustedBreakdown}
-          currentActions={activeActions}
-          onLoadLog={handleLoadCheckpoint}
-        />
+        {/* 01 // The 5 Core Thematic Pillars */}
+        <ChapterViewer onOpenVideo={handleOpenVideo} />
+
+        {/* 02 // The Skillify Engine Playground */}
+        <SkillifyEngine />
+
+        {/* 03 // Field of Vision: 2015 vs 2026 Simulation */}
+        <FieldOfVisionSim />
+
+        {/* 04 // The "White Pill" on AI Adoption Matrix */}
+        <WhitePillMatrix />
+
+        {/* 05 // The Earnestness Founder Diagnostic Radar */}
+        <EarnestnessRadar />
+
+        {/* 06 // The Physical & Civic Flywheel */}
+        <CivicFlywheel />
       </main>
 
-      <footer className="w-full bg-black text-white py-12 px-6 border-t-4 border-black">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-3">
-            <div className="bg-brutalist-accent text-black p-2 brutalist-border-thin">
-              <Leaf size={20} weight="bold" />
-            </div>
-            <span className="font-mono font-black text-lg tracking-tight uppercase text-white">
-              Carbon.Ledger
-            </span>
-          </div>
+      {/* Footer & Playbook Bundle Exporter */}
+      <Footer />
 
-          <div className="font-mono text-[10px] text-zinc-400 uppercase tracking-widest text-center">
-            Pledge carbon compliance - built with React, Tailwind v4 and Space Grotesk
-          </div>
+      {/* Embedded YouTube Video Theater Modal */}
+      <VideoModal
+        isOpen={isVideoOpen}
+        initialSeconds={videoTimestamp}
+        onClose={handleCloseVideo}
+      />
 
-          <div className="font-mono text-xs text-zinc-500">
-            &copy; {new Date().getFullYear()} Carbon Ledger. Open Source.
-          </div>
-        </div>
-      </footer>
     </div>
   );
-}
+};
 
 export default App;
